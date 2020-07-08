@@ -95,7 +95,7 @@ std::string GBDT::DumpModel(int start_iteration, int num_iteration) const {
   }
   str_buf << "]," << '\n';
 
-  std::vector<double> feature_importances = FeatureImportance(num_iteration, 0);
+  std::vector<double> feature_importances = FeatureImportance(num_iteration, 1);
   // store the importance first
   std::vector<std::pair<size_t, std::string>> pairs;
   for (size_t i = 0; i < feature_importances.size(); ++i) {
@@ -364,7 +364,7 @@ std::string GBDT::SaveModelToString(int start_iteration, int num_iteration) cons
   }
   ss << "end of trees" << "\n";
 
-  std::vector<double> feature_importances = FeatureImportance(num_iteration, 0);
+  std::vector<double> feature_importances = FeatureImportance(num_iteration, 1);
   // store the importance first
   std::vector<std::pair<size_t, std::string>> pairs;
   for (size_t i = 0; i < feature_importances.size(); ++i) {
@@ -593,6 +593,7 @@ std::vector<double> GBDT::FeatureImportance(int num_iteration, int importance_ty
 
   std::vector<double> feature_importances(max_feature_idx_ + 1, 0.0);
   if (importance_type == 0) {
+    Log::Info("Importance type = 0");
     for (int iter = 0; iter < num_used_model; ++iter) {
       for (int split_idx = 0; split_idx < models_[iter]->num_leaves() - 1; ++split_idx) {
         if (models_[iter]->split_gain(split_idx) > 0) {
@@ -604,6 +605,7 @@ std::vector<double> GBDT::FeatureImportance(int num_iteration, int importance_ty
       }
     }
   } else if (importance_type == 1) {
+    Log::Info("Importance type = 1");
     for (int iter = 0; iter < num_used_model; ++iter) {
       for (int split_idx = 0; split_idx < models_[iter]->num_leaves() - 1; ++split_idx) {
         if (models_[iter]->split_gain(split_idx) > 0) {
